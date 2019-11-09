@@ -15,121 +15,57 @@
 	}
 </style>
 <script>
-var canvas, ctx, flag = false,
-    prevX = 0,
-    currX = 0,
-    prevY = 0,
-    currY = 0,
-    dot_flag = false;
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+//Variables
+var canvasx = $(canvas).offset().left;
+var canvasy = $(canvas).offset().top;
+var last_mousex = last_mousey = 0;
+var mousex = mousey = 0;
+var mousedown = false;
+var tooltype = 'draw';
 
-var x = "black",
-    y = 2;
+//Mousedown
+$(canvas).on('mousedown', function(e) {
+    last_mousex = mousex = parseInt(e.clientX-canvasx);
+	last_mousey = mousey = parseInt(e.clientY-canvasy);
+    mousedown = true;
+});
 
-function init() {
-    canvas = document.getElementById('can');
-    ctx = canvas.getContext("2d");
-    w = canvas.width;
-    h = canvas.height;
+//Mouseup
+$(canvas).on('mouseup', function(e) {
+    mousedown = false;
+});
 
-    canvas.addEventListener("mousemove", function (e) {
-        findxy('move', e)
-    }, false);
-    canvas.addEventListener("mousedown", function (e) {
-        findxy('down', e)
-    }, false);
-    canvas.addEventListener("mouseup", function (e) {
-        findxy('up', e)
-    }, false);
-    canvas.addEventListener("mouseout", function (e) {
-        findxy('out', e)
-    }, false);
-}
-
-function color(obj) {
-    switch (obj.id) {
-        case "green":
-            x = "green";
-            break;
-        case "blue":
-            x = "blue";
-            break;
-        case "red":
-            x = "red";
-            break;
-        case "yellow":
-            x = "yellow";
-            break;
-        case "orange":
-            x = "orange";
-            break;
-        case "black":
-            x = "black";
-            break;
-        case "white":
-            x = "white";
-            break;
-    }
-    if (x == "white") y = 14;
-    else y = 2;
-
-}
-
-function draw() {
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevY);
-    ctx.lineTo(currX, currY);
-    ctx.strokeStyle = x;
-    ctx.lineWidth = y;
-    ctx.stroke();
-    ctx.closePath();
-}
-
-function erase() {
-    var m = confirm("Want to clear");
-    if (m) {
-        ctx.clearRect(0, 0, w, h);
-        document.getElementById("canvasimg").style.display = "none";
-    }
-}
-
-function save() {
-    document.getElementById("canvasimg").style.border = "2px solid";
-    var dataURL = canvas.toDataURL();
-    document.getElementById("canvasimg").src = dataURL;
-    document.getElementById("canvasimg").style.display = "inline";
-}
-
-function findxy(res, e) {
-    if (res == 'down') {
-        prevX = currX;
-        prevY = currY;
-        currX = e.clientX - canvas.offsetLeft;
-        currY = e.clientY - canvas.offsetTop;
-
-        flag = true;
-        dot_flag = true;
-        if (dot_flag) {
-            ctx.beginPath();
-            ctx.fillStyle = x;
-            ctx.fillRect(currX, currY, 2, 2);
-            ctx.closePath();
-            dot_flag = false;
+//Mousemove
+$(canvas).on('mousemove', function(e) {
+    mousex = parseInt(e.clientX-canvasx);
+    mousey = parseInt(e.clientY-canvasy);
+    if(mousedown) {
+        ctx.beginPath();
+        if(tooltype=='draw') {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+        } else {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = 10;
         }
+        ctx.moveTo(last_mousex,last_mousey);
+        ctx.lineTo(mousex,mousey);
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.stroke();
     }
-    if (res == 'up' || res == "out") {
-        flag = false;
-    }
-    if (res == 'move') {
-        if (flag) {
-            prevX = currX;
-            prevY = currY;
-            currX = e.clientX - canvas.offsetLeft;
-            currY = e.clientY - canvas.offsetTop;
-            draw();
-        }
-    }
-}
+    last_mousex = mousex;
+    last_mousey = mousey;
+    //Output
+    $('#output').html('current: '+mousex+', '+mousey+'<br/>last: '+last_mousex+', '+last_mousey+'<br/>mousedown: '+mousedown);
+});
 
+//Use draw|erase
+use_tool = function(tool) {
+    tooltype = tool; //update
+}
 </script>
 </head>
 <body onload="init()">
