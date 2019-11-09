@@ -10,8 +10,7 @@
 	    border:5px solid #d3d3d3;
 	    background-color: #f1f1f1;
 	    display: block;
-			width: 80vw;
-			height: 80vh;
+
 	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,30 +19,52 @@
     <!-- DO NOT MODIFY THIS HTML -->
     <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
     <input type = "color" id = "picker"/>
-		<input type="button" value="draw" onclick="use_tool('draw');" />
-		<input type="button" value="erase" onclick="use_tool('erase');" />
-		<div id="output"></div>
+
 </body>
 
 <script>
 	const canvas = document.querySelector('#myCanvas');
   const ctx = canvas.getContext('2d');
-//  canvas.width = window.innerWidth;
-//  canvas.height = window.innerHeight;
+	var widths = window.innerWidth;
+	var heights = window.innerHeight;
+  canvas.width = widths * 0.8;
+  canvas.height = heights * 0.8;
 
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
-  ctx.lineWidth = 20;
-  ctx.strokeStyle = '#ac0000';
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = '#000';
 
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
 
+	document.addEventListener('keydown', function(event) {
+	  if (event.code == 'KeyR') {
+	      ctx.strokeStyle = 'red';
+	  }
+		if (event.code == 'KeyB') {
+				ctx.strokeStyle = 'blue';
+		}
+		if (event.code == 'KeyY') {
+				ctx.strokeStyle = 'yellow';
+		}
+		if (event.code == 'KeyG') {
+				ctx.strokeStyle = 'green';
+		}
+		if (event.code == 'Space') {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		if (event.code == 'ArrowUp') {
+				ctx.lineWidth = 0.000000000000000000001;
+		}
+		if (event.code == 'ArrowDown') {
+				ctx.lineWidth = 10;
+		}
+	});
+
   function draw(e) {
-    // stop the function if they are not mouse down
     if(!isDrawing) return;
-    //listen for mouse move event
     console.log(e);
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
@@ -55,10 +76,17 @@
   canvas.addEventListener('mousemove', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
+
   });
 
   canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', () => isDrawing = false);
   canvas.addEventListener('mouseout', () => isDrawing = false);
+
+	const selectElement = document.querySelector('#picker');
+	selectElement.addEventListener('change', (event) => {
+	  const result = document.querySelector('.result');
+	  	ctx.strokeStyle = result;
+	});
+
 </script>
 </html>
