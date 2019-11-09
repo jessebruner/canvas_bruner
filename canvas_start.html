@@ -21,31 +21,40 @@
     <input type = "color" id = "picker"/>
 </body>
 <script>
-var canvasDiv = document.getElementById('canvasDiv');
-canvas = document.createElement('canvas');
-canvas.setAttribute('width', canvasWidth);
-canvas.setAttribute('height', canvasHeight);
-canvas.setAttribute('id', 'canvas');
-canvasDiv.appendChild(canvas);
-if(typeof G_vmlCanvasManager != 'undefined') {
-	canvas = G_vmlCanvasManager.initElement(canvas);
-}
-context = canvas.getContext("2d");
+const canvas = document.querySelector('#draw');
+  // could be 3d, if you want to make a video game
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-$('#canvas').mousedown(function(e){
-  var mouseX = e.pageX - this.offsetLeft;
-  var mouseY = e.pageY - this.offsetTop;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 20;
+  ctx.strokeStyle = '#ac0000';
 
-  paint = true;
-  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-  redraw();
-});
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
 
-$('#canvas').mousemove(function(e){
-  if(paint){
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-    redraw();
+  function draw(e) {
+    // stop the function if they are not mouse down
+    if(!isDrawing) return;
+    //listen for mouse move event
+    console.log(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
   }
-});
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
 </script>
 </html>
