@@ -14,6 +14,13 @@
 			height: 80vh;
 	}
 </style>
+</head>
+<body>
+    <!-- DO NOT MODIFY THIS HTML -->
+    <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
+    <input type = "color" id = "picker"/>
+</body>
+
 <script>
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -67,11 +74,4 @@ use_tool = function(tool) {
     tooltype = tool; //update
 }
 </script>
-</head>
-<body onload="init()">
-    <!-- DO NOT MODIFY THIS HTML -->
-    <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
-    <input type = "color" id = "picker"/>
-</body>
-
 </html>
