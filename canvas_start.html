@@ -14,12 +14,6 @@
 			height: 80vh;
 	}
 </style>
-</head>
-<body>
-    <!-- DO NOT MODIFY THIS HTML -->
-    <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
-    <input type = "color" id = "picker"/>
-</body>
 <script>
 var canvas, ctx, flag = false,
     prevX = 0,
@@ -137,4 +131,11 @@ function findxy(res, e) {
 }
 
 </script>
+</head>
+<body onload="init()">
+    <!-- DO NOT MODIFY THIS HTML -->
+    <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
+    <input type = "color" id = "picker"/>
+</body>
+
 </html>
