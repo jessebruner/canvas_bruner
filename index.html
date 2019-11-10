@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Drawing Area</title>
+<!-- You can add your style here rather than in an external style sheet. -->
+<style>
+	canvas {
+	    border:5px solid #d3d3d3;
+	    background-color: #f1f1f1;
+	    display: block;
+
+	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <!-- DO NOT MODIFY THIS HTML -->
+    <canvas id = "myCanvas" width = "350" height = "500"  ></canvas>
+    <input type = "color" id = "picker"/>
+
+</body>
+
+<script>
+//Setting up canvas//
+	const canvas = document.querySelector('#myCanvas');
+  const ctx = canvas.getContext('2d');
+	var widths = window.innerWidth;
+	var heights = window.innerHeight;
+  canvas.width = widths * 0.8; //by multiplying by 0.8, we get the 80% needed//
+  canvas.height = heights * 0.8;
+
+//sets up the pen//
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = '#000';
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+//This listens for when a key is down, and then goes through a list of if statements to decide what to change the color to.//
+	document.addEventListener('keydown', function(event) {
+	  if (event.code == 'KeyR') {
+	      ctx.strokeStyle = 'red';
+	  }
+		if (event.code == 'KeyB') {
+				ctx.strokeStyle = 'blue';
+		}
+		if (event.code == 'KeyY') {
+				ctx.strokeStyle = 'yellow';
+		}
+		if (event.code == 'KeyG') {
+				ctx.strokeStyle = 'green';
+		}
+		if (event.code == 'Space') {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		if (event.code == 'ArrowUp') {
+				ctx.lineWidth = 0.000000000000000000001;
+		}
+		if (event.code == 'ArrowDown') {
+				ctx.lineWidth = 10;
+		}
+	});
+
+//The draw function.//
+  function draw(e) {
+    if(!isDrawing) return;
+    console.log(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  }
+
+//Tracks the mouse movement//
+  canvas.addEventListener('mousemove', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+
+//Initiates drawing with event listener//
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+
+//Listens for a change in the color picker input, and then runs the function to get the value of the picker, and sets the stroke style to that color//
+	document.getElementById("picker").addEventListener("change", changecolor);
+	function changecolor(){
+		var xx = document.getElementById("picker").value;
+						ctx.strokeStyle = xx;
+	};
+</script>
+</html>
