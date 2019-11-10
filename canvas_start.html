@@ -23,22 +23,24 @@
 </body>
 
 <script>
+//Setting up canvas//
 	const canvas = document.querySelector('#myCanvas');
   const ctx = canvas.getContext('2d');
 	var widths = window.innerWidth;
 	var heights = window.innerHeight;
-  canvas.width = widths * 0.8;
+  canvas.width = widths * 0.8; //by multiplying by 0.8, we get the 80% needed//
   canvas.height = heights * 0.8;
 
+//sets up the pen//
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.lineWidth = 10;
   ctx.strokeStyle = '#000';
-
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
 
+//This listens for when a key is down, and then goes through a list of if statements to decide what to change the color to.//
 	document.addEventListener('keydown', function(event) {
 	  if (event.code == 'KeyR') {
 	      ctx.strokeStyle = 'red';
@@ -63,6 +65,7 @@
 		}
 	});
 
+//The draw function.//
   function draw(e) {
     if(!isDrawing) return;
     console.log(e);
@@ -73,20 +76,21 @@
     [lastX, lastY] = [e.offsetX, e.offsetY];
   }
 
+//Tracks the mouse movement//
   canvas.addEventListener('mousemove', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
-
   });
 
+//Initiates drawing with event listener//
   canvas.addEventListener('mousemove', draw);
   canvas.addEventListener('mouseout', () => isDrawing = false);
 
-	const selectElement = document.querySelector('#picker');
-	selectElement.addEventListener('change', (event) => {
-	  const result = document.querySelector('.result');
-	  	ctx.strokeStyle = result;
-	});
-
+//Listens for a change in the color picker input, and then runs the function to get the value of the picker, and sets the stroke style to that color//
+	document.getElementById("picker").addEventListener("change", changecolor);
+	function changecolor(){
+		var xx = document.getElementById("picker").value;
+						ctx.strokeStyle = xx;
+	};
 </script>
 </html>
